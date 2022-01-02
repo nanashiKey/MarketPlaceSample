@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TokopediaSample</string>
+    <string name="status_member">Status Member</string>
+    <string name="official_store">Official Store</string>
+    <string name="accounting">Accounting</string>
+    <string name="blog_document">Blog Document</string>
+    <string name="oil_store">Oil Store</string>
+    <string name="edit_menu">Edit Menu</string>
+    <string name="cash_flow">Cash Flow</string>
+    <string name="cari_item">cari item</string>
+    <string name="dikirim_ke_rumah_tetangga">dikirim ke-rumah tetangga</string>
 </resources>
