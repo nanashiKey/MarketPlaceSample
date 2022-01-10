@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.tokosample.tokopediasample.adapters.BannerAdapter;
+import com.tokosample.tokopediasample.adapters.SampleProductAdapter;
 import com.tokosample.tokopediasample.helpers.ApiServices;
 import com.tokosample.tokopediasample.helpers.Const;
-import com.tokosample.tokopediasample.responsemodel.ImagesResponse;
+import com.tokosample.tokopediasample.responsemodel.banner.ImagesResponse;
+import com.tokosample.tokopediasample.responsemodel.sampleproduct.SampleProductResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,28 +35,59 @@ public class MainActivity extends AppCompatActivity {
      R.drawable.banner5
     };
     BannerAdapter bannerAdapter;
+    SampleProductAdapter sampleProductAdapter;
     ArrayList<String> listUrl;
-    RecyclerView rcView;
+    RecyclerView rcView, rcView2;
     ProgressBar probar;
+    Retrofit retro;
+    ApiServices apidata;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rcView = findViewById(R.id.rcView);
+        rcView2 = findViewById(R.id.rcView2);
         probar= findViewById(R.id.progresBar);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rcView.setLayoutManager(layoutManager);
+        rcView2.setLayoutManager(layoutManager2);
         bannerAdapter = new BannerAdapter();
+        sampleProductAdapter = new SampleProductAdapter();
         listUrl = new ArrayList<>();
-        loadImages();
-    }
-
-    private void loadImages(){
-        Retrofit retro = new Retrofit.Builder()
+        retro = new Retrofit.Builder()
                 .baseUrl(Const.getUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        ApiServices apidata = retro.create(ApiServices.class);
+        apidata = retro.create(ApiServices.class);
+        loadImages();
+        loadSampleProduct();
+    }
+
+    private void loadSampleProduct() {
+        apidata.getProduct().enqueue(new Callback<SampleProductResponse>() {
+            @Override
+            public void onResponse(Call<SampleProductResponse> call, Response<SampleProductResponse> response) {
+                if(response.isSuccessful()){
+                    SampleProductResponse data = response.body();
+                    if(data != null){
+                        sampleProductAdapter = new SampleProductAdapter(MainActivity.this, data.data);
+                        rcView2.setAdapter(sampleProductAdapter);
+                    }
+
+                }else{
+                    Log.e("ERROR", "Koneksi gagal");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SampleProductResponse> call, Throwable t) {
+                t.getLocalizedMessage();
+            }
+        });
+    }
+
+    private void loadImages(){
         apidata.getImages().enqueue(new Callback<ImagesResponse>() {
             @Override
             public void onResponse(Call<ImagesResponse> call, Response<ImagesResponse> response) {

@@ -1,4 +1,4 @@
-package com.tokosample.tokopediasample.responsemodel;
+package com.tokosample.tokopediasample.responsemodel.banner;
 
 import com.google.gson.annotations.SerializedName;
 
