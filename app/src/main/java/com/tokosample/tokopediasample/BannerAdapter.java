@@ -11,13 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
     Context ctx;
     Integer[] gambar;
+    ArrayList<String> listGambar;
     public BannerAdapter(){ }
-    public BannerAdapter(Context ctx, Integer[] gambar){
+    public BannerAdapter(Context ctx, ArrayList<String> listGambar){
         this.ctx = ctx;
-        this.gambar = gambar;
+        this.listGambar = listGambar;
     }
     @NonNull
     @Override
@@ -27,7 +32,11 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
 
     @Override
     public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
-        holder.imgBanner.setImageResource(gambar[position]);
+        String urlGambar = listGambar.get(position);
+        Glide.with(ctx)
+                .load(urlGambar)
+                .error(android.R.drawable.ic_menu_gallery)
+                .into(holder.imgBanner);
         holder.cvBanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,7 +47,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
 
     @Override
     public int getItemCount() {
-        return gambar.length;
+        return listGambar.size();
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder{
